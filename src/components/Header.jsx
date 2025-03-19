@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react"; // ✅ Import Auth0 hook
 
 const Header = () => {
   const location = useLocation();
+  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0(); // ✅ Use Auth0 authentication functions
 
   const navItems = [
     { path: "/", label: "Home" },
@@ -38,14 +40,29 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Sign In Button */}
+          {/* Authentication Buttons */}
           <div className="hidden md:block">
-            <Link
-              to="/sign-in"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            >
-              Sign In
-            </Link>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4">
+                {/* ✅ Show User Info */}
+                <span className="text-gray-700">{user.name}</span>
+                {/* ✅ Logout Button */}
+                <button
+                  onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              /* ✅ Login Button */
+              <button
+                onClick={() => loginWithRedirect()}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </div>

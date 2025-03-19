@@ -1,8 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Home as HomeIcon, Building, Star } from 'lucide-react'
+import { useAuth0 } from "@auth0/auth0-react";
+
 
 export default function Home() {
+  const { loginWithRedirect, isAuthenticated } = useAuth0();
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -15,9 +18,14 @@ export default function Home() {
               <Link to="/properties" className="px-6 py-3 bg-white text-blue-700 rounded-lg font-medium hover:bg-blue-50 transition">
                 Browse Properties
               </Link>
-              <Link to="/sign-in" className="px-6 py-3 border border-white rounded-lg font-medium hover:bg-blue-700 transition">
-                Sign In
-              </Link>
+              {!isAuthenticated && (
+              <button 
+               onClick={() => loginWithRedirect()} 
+                className="px-6 py-3 border border-white rounded-lg font-medium hover:bg-blue-700 transition"
+              >
+              Sign In
+             </button>
+)}
             </div>
           </div>
         </div>
